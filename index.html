@@ -1,0 +1,972 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Projeto educativo sobre criptografia, funções hash e segurança da informação.">
+<title>SecureLab | Criptografia e Hash</title>
+
+<style>
+:root {
+--ink: #28243a;
+--muted: #716d7d;
+--pink: #f6dce8;
+--pink-strong: #d879a5;
+--yellow: #fff2c7;
+--paper: #fffdfb;
+--line: #eee7eb;
+--navy: #302b48;
+--success: #287a58;
+--shadow: 0 16px 45px rgba(48,43,72,.08);
+}
+
+* {
+box-sizing: border-box;
+}
+
+html {
+scroll-behavior: smooth;
+}
+
+body {
+margin: 0;
+font-family: Arial, sans-serif;
+color: var(--ink);
+background: #fbf9fa;
+line-height: 1.6;
+}
+
+button, input, textarea, select {
+font: inherit;
+}
+
+button {
+cursor: pointer;
+}
+
+.topbar {
+position: sticky;
+top: 0;
+z-index: 10;
+background: rgba(255,253,251,.95);
+border-bottom: 1px solid var(--line);
+}
+
+.nav {
+max-width: 1120px;
+margin: auto;
+padding: 15px 24px;
+display: flex;
+justify-content: space-between;
+align-items: center;
+gap: 20px;
+}
+
+.brand {
+display: flex;
+align-items: center;
+gap: 11px;
+font-weight: 800;
+}
+
+.brand-mark {
+width: 38px;
+height: 38px;
+display: grid;
+place-items: center;
+border-radius: 12px;
+background: linear-gradient(135deg,var(--pink),var(--yellow));
+font-size: 19px;
+}
+
+.brand small {
+display: block;
+color: var(--muted);
+font-size: 10px;
+letter-spacing: 1.5px;
+}
+
+.nav-links {
+display: flex;
+gap: 22px;
+}
+
+.nav-links a {
+color: var(--muted);
+text-decoration: none;
+font-size: 13px;
+font-weight: bold;
+}
+
+.hero {
+max-width: 1120px;
+margin: auto;
+padding: 76px 24px 52px;
+}
+
+.eyebrow {
+display: inline-block;
+padding: 7px 12px;
+border: 1px solid #f0dce6;
+border-radius: 99px;
+background: white;
+color: #9c5b7b;
+font-size: 11px;
+font-weight: bold;
+letter-spacing: 1px;
+}
+
+h1 {
+max-width: 760px;
+margin: 20px 0 15px;
+font-size: clamp(38px,6vw,64px);
+line-height: 1.04;
+letter-spacing: -2px;
+}
+
+.gradient-text {
+background: linear-gradient(90deg,#a65d83,#b28a35);
+-webkit-background-clip: text;
+background-clip: text;
+color: transparent;
+}
+
+.hero p {
+max-width: 670px;
+color: var(--muted);
+font-size: 17px;
+}
+
+.hero-actions {
+display: flex;
+flex-wrap: wrap;
+gap: 12px;
+margin-top: 28px;
+}
+
+.btn {
+border: 0;
+border-radius: 12px;
+padding: 12px 18px;
+font-weight: bold;
+transition: .2s;
+}
+
+.btn:hover {
+transform: translateY(-2px);
+}
+
+.btn-primary {
+color: white;
+background: var(--navy);
+}
+
+.btn-soft {
+color: var(--ink);
+background: white;
+border: 1px solid var(--line);
+}
+
+main {
+max-width: 1120px;
+margin: auto;
+padding: 0 24px 70px;
+}
+
+.stats {
+display: grid;
+grid-template-columns: repeat(3,1fr);
+gap: 15px;
+margin-bottom: 42px;
+}
+
+.stat {
+padding: 19px 21px;
+border: 1px solid var(--line);
+background: white;
+border-radius: 17px;
+}
+
+.stat strong {
+display: block;
+font-size: 23px;
+}
+
+.stat span {
+color: var(--muted);
+font-size: 12px;
+}
+
+.section-heading {
+margin: 55px 0 20px;
+}
+
+.section-heading span {
+color: #a36c86;
+font-size: 11px;
+letter-spacing: 1.5px;
+font-weight: bold;
+}
+
+.section-heading h2 {
+margin: 5px 0;
+font-size: 29px;
+}
+
+.section-heading p {
+color: var(--muted);
+max-width: 700px;
+font-size: 14px;
+}
+
+.tool-grid {
+display: grid;
+grid-template-columns: repeat(2,minmax(0,1fr));
+gap: 18px;
+}
+
+.card {
+background: var(--paper);
+border: 1px solid var(--line);
+border-radius: 20px;
+padding: 24px;
+box-shadow: var(--shadow);
+min-width: 0;
+}
+
+.card-head {
+display: flex;
+align-items: flex-start;
+gap: 13px;
+margin-bottom: 18px;
+}
+
+.icon {
+width: 42px;
+height: 42px;
+flex: 0 0 42px;
+display: grid;
+place-items: center;
+border-radius: 13px;
+background: linear-gradient(135deg,var(--pink),var(--yellow));
+font-size: 20px;
+}
+
+.card h3 {
+margin: 0;
+font-size: 18px;
+}
+
+.card-head p {
+margin: 3px 0 0;
+color: var(--muted);
+font-size: 12px;
+}
+
+label {
+display: block;
+margin: 13px 0 6px;
+color: #555064;
+font-size: 12px;
+font-weight: bold;
+}
+
+textarea, input, select {
+width: 100%;
+border: 1px solid #e8e1e6;
+border-radius: 11px;
+background: white;
+padding: 12px 13px;
+color: var(--ink);
+outline: none;
+}
+
+textarea {
+resize: vertical;
+min-height: 92px;
+}
+
+textarea:focus, input:focus, select:focus {
+border-color: var(--pink-strong);
+box-shadow: 0 0 0 3px rgba(216,121,165,.13);
+}
+
+.inline-fields {
+display: grid;
+grid-template-columns: 1fr 1fr;
+gap: 12px;
+}
+
+.actions {
+display: flex;
+flex-wrap: wrap;
+gap: 9px;
+margin-top: 13px;
+}
+
+.actions .btn {
+padding: 10px 14px;
+font-size: 12px;
+}
+
+.output {
+margin-top: 15px;
+padding: 13px;
+min-height: 48px;
+border-radius: 11px;
+background: #f8f5f7;
+border: 1px dashed #e7dce3;
+overflow-wrap: anywhere;
+font-family: monospace;
+font-size: 12px;
+color: #4d4659;
+}
+
+.hint {
+color: var(--muted);
+font-size: 11px;
+}
+
+.meter {
+height: 8px;
+background: #eee9ed;
+border-radius: 20px;
+overflow: hidden;
+margin: 12px 0 7px;
+}
+
+.meter > div {
+height: 100%;
+width: 0;
+background: #d5a83e;
+border-radius: inherit;
+transition: width .25s;
+}
+
+.status {
+font-size: 12px;
+font-weight: bold;
+}
+
+.info-band {
+display: grid;
+grid-template-columns: 1.1fr .9fr;
+gap: 20px;
+margin-top: 22px;
+padding: 25px;
+border-radius: 20px;
+background: linear-gradient(115deg,#f9e8ef,#fff5d8);
+border: 1px solid #f0e3e4;
+}
+
+.info-band h3 {
+margin: 0 0 7px;
+font-size: 18px;
+}
+
+.info-band p,
+.info-band li {
+color: #625c6d;
+font-size: 13px;
+}
+
+.info-band ul {
+padding-left: 18px;
+}
+
+.notice {
+border-left: 3px solid #d5a83e;
+padding: 9px 0 9px 13px;
+align-self: center;
+}
+
+footer {
+border-top: 1px solid var(--line);
+background: #fffdfb;
+padding: 25px;
+text-align: center;
+color: var(--muted);
+font-size: 11px;
+}
+
+@media (max-width: 760px) {
+.nav-links {
+display: none;
+}
+
+.hero {
+padding: 55px 20px 35px;
+}
+
+main {
+padding: 0 20px 50px;
+}
+
+.stats,
+.tool-grid,
+.info-band {
+grid-template-columns: 1fr;
+}
+
+.card {
+padding: 19px;
+}
+
+h1 {
+letter-spacing: -1px;
+}
+}
+</style>
+</head>
+
+<body>
+
+<header class="topbar">
+<nav class="nav">
+<div class="brand">
+<div class="brand-mark">⌘</div>
+<div>
+SecureLab
+<small>INFORMAÇÃO • TECNOLOGIA • SEGURANÇA</small>
+</div>
+</div>
+
+<div class="nav-links">
+<a href="#conceitos">CONCEITOS</a>
+<a href="#ferramentas">FERRAMENTAS</a>
+<a href="#boas-praticas">BOAS PRÁTICAS</a>
+</div>
+</nav>
+</header>
+
+<section class="hero">
+<div class="eyebrow">✦ Projeto educacional de tecnologia</div>
+
+<h1>
+Proteção de informações:<br>
+<span class="gradient-text">criptografia e hash</span>
+</h1>
+
+<p>
+Um laboratório interativo para entender como mensagens podem
+ser protegidas, como funções hash transformam dados e por que
+senhas fortes são essenciais para a segurança digital.
+</p>
+
+<div class="hero-actions">
+<a href="#ferramentas">
+<button class="btn btn-primary">Explorar ferramentas ↗</button>
+</a>
+
+<a href="#conceitos">
+<button class="btn btn-soft">Conhecer os conceitos</button>
+</a>
+</div>
+</section>
+
+<main>
+
+<div class="stats">
+<div class="stat">
+<strong>03</strong>
+<span>ferramentas interativas</span>
+</div>
+
+<div class="stat">
+<strong>SHA-256</strong>
+<span>função hash demonstrada</span>
+</div>
+
+<div class="stat">
+<strong>100%</strong>
+<span>execução local no navegador</span>
+</div>
+</div>
+
+<section id="conceitos">
+<div class="section-heading">
+<span>01 / FUNDAMENTOS</span>
+<h2>Entenda antes de experimentar</h2>
+<p>
+Criptografia e hash são recursos importantes para preservar
+a confidencialidade e a integridade das informações.
+</p>
+</div>
+
+<div class="info-band">
+<div>
+<h3>Criptografia</h3>
+<p>
+É uma técnica que transforma uma mensagem legível em um
+formato que dificulta sua leitura por pessoas não autorizadas.
+Com a chave correta, o conteúdo pode ser recuperado.
+</p>
+
+<h3>Função hash</h3>
+<p>
+Converte uma informação de qualquer tamanho em um resumo
+de tamanho definido. O hash é usado para verificar a
+integridade de arquivos e proteger verificações de senhas.
+</p>
+</div>
+
+<div class="notice">
+<h3>Qual é a diferença?</h3>
+<ul>
+<li>
+<strong>Criptografia:</strong>
+permite recuperar o conteúdo usando uma chave.
+</li>
+<li>
+<strong>Hash:</strong>
+foi projetado para ser unidirecional.
+</li>
+<li>
+<strong>Segurança:</strong>
+depende de boas práticas e proteção das chaves.
+</li>
+</ul>
+</div>
+</div>
+</section>
+
+<section id="ferramentas">
+<div class="section-heading">
+<span>02 / LABORATÓRIO</span>
+<h2>Experimente na prática</h2>
+<p>
+Digite informações de exemplo e observe como cada recurso
+funciona. Os dados são processados no próprio navegador.
+</p>
+</div>
+
+<div class="tool-grid">
+
+<!
+-CIFRA DE CÉSAR -->
+<article class="card">
+<div class="card-head">
+<div class="icon">🔐</div>
+<div>
+<h3>Cifra de substituição</h3>
+<p>Codifique e decodifique mensagens com a Cifra de César.</p>
+</div>
+</div>
+<label for="caesarText">Mensagem</label>
+<textarea id="caesarText">Olá, mundo! Proteja suas informações.</textarea>
+
+<div class="inline-fields">
+<div>
+<label for="caesarShift">Deslocamento</label>
+<input id="caesarShift" type="number" min="0" max="25" value="3">
+</div>
+
+<div>
+<label for="caesarMode">Operação</label>
+<select id="caesarMode">
+<option value="encode">Criptografar</option>
+<option value="decode">Descriptografar</option>
+</select>
+</div>
+</div>
+
+<div class="actions">
+<button class="btn btn-primary" onclick="runCaesar()">Executar</button>
+<button class="btn btn-soft" onclick="copyOutput('caesarOutput')">Copiar resultado</button>
+</div>
+
+<div class="output" id="caesarOutput">
+O resultado aparecerá aqui.
+</div>
+
+<p class="hint">
+Demonstração didática: a Cifra de César é simples e não deve
+ser usada para proteger dados reais.
+</p>
+</article>
+
+<!
+-HASH SHA-256 -->
+<article class="card">
+<div class="card-head">
+<div class="icon">#️⃣</div>
+<div>
+<h3>Gerador de hash SHA-256</h3>
+<p>Gere uma impressão digital digital do texto informado.</p>
+</div>
+</div>
+<label for="hashText">Texto para transformar em hash</label>
+<textarea id="hashText">Segurança da informação</textarea>
+
+<div class="actions">
+<button class="btn btn-primary" onclick="generateHash()">
+Gerar hash SHA-256
+</button>
+
+<button class="btn btn-soft" onclick="copyOutput('hashOutput')">
+Copiar hash
+</button>
+</div>
+
+<div class="output" id="hashOutput">
+O hash hexadecimal aparecerá aqui.
+</div>
+
+<p class="hint">
+Uma pequena mudança no texto normalmente produz um hash
+completamente diferente.
+</p>
+</article>
+
+<!
+-ANALISADOR DE SENHAS -->
+<article class="card">
+<div class="card-head">
+<div class="icon">🛡️</div>
+<div>
+<h3>Analisador de senha</h3>
+<p>Avalie características que ajudam a criar senhas mais seguras.</p>
+</div>
+</div>
+<label for="passwordInput">Senha de exemplo</label>
+
+<input
+id="passwordInput"
+type="password"
+placeholder="Digite uma senha fictícia"
+autocomplete="off"
+oninput="analyzePassword()"
+>
+
+<div class="meter">
+<div id="passwordMeter"></div>
+</div>
+
+<div class="status" id="passwordStatus">
+Aguardando uma senha
+</div>
+
+<div class="output" id="passwordFeedback">
+A análise será exibida aqui.
+</div>
+
+<p class="hint">
+Não informe uma senha verdadeira. Use apenas um exemplo inventado.
+</p>
+</article>
+
+<!
+-SIMULADOR DE COMBINAÇÕES -->
+<article class="card">
+<div class="card-head">
+<div class="icon">⏱️</div>
+<div>
+<h3>Simulador de combinações</h3>
+<p>Visualize como o tamanho e a variedade de caracteres afetam as possibilidades.</p>
+</div>
+</div>
+<label for="lengthInput">Quantidade de caracteres</label>
+<input id="lengthInput" type="number" min="1" max="30" value="8">
+
+<label for="charsetInput">Conjunto de caracteres considerado</label>
+<select id="charsetInput">
+<option value="10">Somente números (10 possibilidades)</option>
+<option value="26">Letras minúsculas (26 possibilidades)</option>
+<option value="52">Letras maiúsculas e minúsculas (52 possibilidades)</option>
+<option value="94" selected>Letras, números e símbolos (94 possibilidades)</option>
+</select>
+
+<div class="actions">
+<button class="btn btn-primary" onclick="calculateCombinations()">
+Calcular possibilidades
+</button>
+</div>
+
+<div class="output" id="combinationOutput">
+O total de combinações aparecerá aqui.
+</div>
+
+<p class="hint">
+Simulação matemática educativa. Não testa senhas nem realiza tentativas de login.
+</p>
+</article>
+
+</div>
+</section>
+
+<section id="boas-praticas">
+<div class="section-heading">
+<span>03 / APLICAÇÃO</span>
+<h2>Boas práticas de segurança</h2>
+<p>
+Pequenas atitudes ajudam a reduzir riscos no uso diário da tecnologia.
+</p>
+</div>
+
+<div class="info-band">
+<div>
+<h3>Cuide das suas informações</h3>
+
+<ul>
+<li>Crie senhas longas e diferentes para cada serviço.</li>
+<li>Ative a autenticação em dois fatores.</li>
+<li>Não compartilhe senhas nem códigos de verificação.</li>
+<li>Mantenha aplicativos e dispositivos atualizados.</li>
+<li>Desconfie de links e mensagens inesperadas.</li>
+</ul>
+</div>
+
+<div class="notice">
+<h3>Conclusão</h3>
+
+<p>
+A criptografia, as funções hash e o uso de senhas fortes
+contribuem para a proteção de dados. Conhecer esses
+mecanismos permite utilizar a tecnologia com mais
+consciência e responsabilidade.
+</p>
+
+<p>
+<strong>
+Aprender segurança digital é também aprender a proteger
+a nossa privacidade.
+</strong>
+</p>
+</div>
+</div>
+</section>
+
+</main>
+
+<footer>
+<strong>SecureLab</strong> · Projeto educacional sobre criptografia e hash
+· Desenvolvido em um único arquivo HTML
+</footer>
+
+<script>
+
+// CIFRA DE CÉSAR
+function caesarCipher(text, shift, decode) {
+
+const direction = decode ? -1 : 1;
+
+const amount = ((shift * direction) % 26 + 26) % 26;
+
+return [...text].map(char => {
+
+const code = char.charCodeAt(0);
+
+if (code >= 65 && code <= 90) {
+return String.fromCharCode(
+(code
+65 + amount) % 26 + 65
+);
+}
+if (code >= 97 && code <= 122) {
+return String.fromCharCode(
+(code
+97 + amount) % 26 + 97
+);
+}
+return char;
+
+}).join('');
+}
+
+function runCaesar() {
+
+const text = document.getElementById('caesarText').value;
+
+const shift = Math.max(
+0,
+Math.min(25, Number(document.getElementById('caesarShift').value) || 0)
+);
+
+const decode =
+document.getElementById('caesarMode').value === 'decode';
+
+document.getElementById('caesarOutput').textContent =
+caesarCipher(text, shift, decode) ||
+'Digite uma mensagem para continuar.';
+}
+
+
+// GERADOR DE HASH SHA-256
+async function generateHash() {
+
+const output = document.getElementById('hashOutput');
+
+const text = document.getElementById('hashText').value;
+
+if (!text) {
+output.textContent = 'Digite um texto antes de gerar o hash.';
+return;
+}
+
+if (!window.crypto || !crypto.subtle) {
+output.textContent =
+'A API de segurança não está disponível. Abra esta página em HTTPS ou localhost.';
+return;
+}
+
+try {
+
+output.textContent = 'Gerando hash...';
+
+const data = new TextEncoder().encode(text);
+
+const digest = await crypto.subtle.digest('SHA-256', data);
+
+output.textContent = [...new Uint8Array(digest)]
+.map(byte => byte.toString(16).padStart(2, '0'))
+.join('');
+
+} catch (error) {
+
+output.textContent =
+'Não foi possível gerar o hash neste navegador.';
+
+}
+}
+
+
+// ANALISADOR DE SENHAS
+function analyzePassword() {
+
+const password =
+document.getElementById('passwordInput').value;
+
+const meter =
+document.getElementById('passwordMeter');
+
+const status =
+document.getElementById('passwordStatus');
+
+const feedback =
+document.getElementById('passwordFeedback');
+
+if (!password) {
+
+meter.style.width = '0%';
+
+status.textContent = 'Aguardando uma senha';
+
+feedback.textContent = 'A análise será exibida aqui.';
+
+return;
+}
+
+let score = 0;
+
+const checks = [
+
+[password.length >= 12, 'Use 12 caracteres ou mais.'],
+
+[/[a-z]/.test(password), 'Inclua letras minúsculas.'],
+
+[/[A-Z]/.test(password), 'Inclua letras maiúsculas.'],
+
+[/[0-9]/.test(password), 'Inclua números.'],
+
+[/[^A-Za-z0-9]/.test(password), 'Inclua símbolos, como ! ou #.']
+
+];
+
+checks.forEach(([passed]) => {
+
+if (passed) score++;
+
+});
+
+const percent = score * 20;
+
+meter.style.width = percent + '%';
+
+const labels = [
+'Muito fraca',
+'Fraca',
+'Razoável',
+'Boa',
+'Forte',
+'Muito forte'
+];
+
+status.textContent = labels[score];
+
+status.style.color =
+score >= 4 ? '#287a58' : '#a36c45';
+
+const missing = checks
+.filter(([passed]) => !passed)
+.map(([, message]) => message);
+
+feedback.textContent = missing.length
+? 'Sugestões: ' + missing.join(' ')
+: 'Ótimo exemplo! Ele atende aos critérios básicos avaliados.';
+}
+
+
+// SIMULADOR DE COMBINAÇÕES
+function calculateCombinations() {
+
+const length = Math.max(
+1,
+Math.min(30, Number(document.getElementById('lengthInput').value) || 1)
+);
+
+const size =
+Number(document.getElementById('charsetInput').value);
+
+const total =
+BigInt(size) ** BigInt(length);
+
+document.getElementById('combinationOutput').textContent =
+
+`${size.toLocaleString('pt-BR')} possibilidades por caractere × ${length} posições = ${total.toLocaleString('pt-BR')} combinações possíveis.`;
+}
+
+
+// COPIAR RESULTADOS
+async function copyOutput(id) {
+
+const text = document.getElementById(id).textContent;
+
+if (
+!text ||
+text.includes('aparecerá aqui') ||
+text.includes('será exibida aqui')
+) {
+return;
+}
+
+try {
+
+await navigator.clipboard.writeText(text);
+
+const element = document.getElementById(id);
+
+const previous = element.textContent;
+
+element.textContent =
+'Copiado para a área de transferência!';
+
+setTimeout(() => {
+element.textContent = previous;
+}, 1400);
+
+} catch (error) {
+
+alert(
+'Não foi possível copiar automaticamente. Selecione o resultado e copie manualmente.'
+);
+
+}
+}
+
+// Executa o cálculo inicial.
+calculateCombinations();
+
+</script>
+
+</body>
+</html>
